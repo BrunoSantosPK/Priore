@@ -7,13 +7,15 @@ import Substancia from "./Substancia";
 type Membro = {
     coeficiente: number,
     substancia: Substancia,
-    molInicial: number
+    molInicial: number,
+    massaInicial: number
 };
 
 type MembroSet = {
     coeficiente: number,
     substancia: Substancia,
-    molInicial?: number
+    molInicial?: number,
+    massaInicial?: number
 };
 
 type Composicao = {
@@ -22,15 +24,81 @@ type Composicao = {
     multiplicador: number
 };
 
+type Sistema = {
+    substancia: Substancia,
+    molInicial: number,
+    molFinal: number,
+    limitante?: string
+};
+
 export default class ReacaoQuimica implements Integridade {
 
     // Integridade
     erro = false;
     message = "";
+
+    // Atributos da classe
     reagentes: Membro[] = [];
     produtos: Membro[] = [];
+    conversao = 0;
 
-    montar() {
+    montar() {}
+
+    setConversao(valor: number): boolean {
+        if(valor > 0 && valor <= 1) {
+            this.conversao = valor;
+            return true;
+        }
+        return false;
+    }
+
+    getConversao(): number {
+        return this.conversao;
+    }
+
+    reagir(): Sistema[] {
+        const limitante = this.definirLimitante();
+        const molLimitante = this.reagentes[limitante].molInicial;
+        const coefLimitante = this.reagentes[limitante].coeficiente;
+        const conversao = this.conversao;
+        const sistema: Sistema[] = [];
+
+        // Faz o balanceamento
+        this.balancear();
+        if(this.getErro()) {
+            return sistema;
+        }
+
+        // Consome reagentes
+        this.reagentes.forEach((reagente, indc) => {
+            let mol0 = reagente.molInicial;
+            let coef = reagente.coeficiente;
+            let mol = molLimitante * (mol0 / molLimitante - coef * conversao / coefLimitante);
+            let lim = limitante == indc ? "Sim" : "Não";
+            sistema.push({
+                substancia: reagente.substancia,
+                molInicial: mol0,
+                molFinal: mol,
+                limitante: lim
+            });
+        });
+
+        // Gera produtos
+        this.produtos.forEach((produto, indc) => {
+            let mol0 = produto.molInicial;
+            let coef = produto.coeficiente;
+            let mol = molLimitante * (mol0 / molLimitante - coef * conversao / coefLimitante);
+            sistema.push({
+                substancia: produto.substancia,
+                molInicial: mol0,
+                molFinal: mol
+            });
+        });
+
+        return sistema;
+    }
+
+    balancear() {
         // Conta todos os elementos nos reagentes
         const elementos: Composicao[] = [];
         this.reagentes.forEach(subs => {
@@ -70,23 +138,51 @@ export default class ReacaoQuimica implements Integridade {
         });
 
         if(!balanceado) {
-            this.setErro(!balanceado, msn);
+            this.setErro(true, msn);
+        } else {
+            this.setErro(false, "Equação química balanceada.");
         }
     }
 
-    setReagente({ substancia, coeficiente, molInicial = 0 }: MembroSet) {
+    setReagente({ substancia, coeficiente, molInicial = 0, massaInicial = 0 }: MembroSet) {
+        // Normaliza: não pode receber molInicial e massaInicial ao mesmo tempo
+        if(molInicial != 0 && massaInicial != 0)
+            massaInicial = 0;
+
+        // Calcula a massa inicial
+        if(molInicial != 0)
+            massaInicial = substancia.getMassaMolar() * molInicial;
+
+        // Calcula a quantidade de matéria inicial
+        if(massaInicial != 0)
+            molInicial = massaInicial / substancia.getMassaMolar();
+
         this.reagentes.push({
             substancia,
             coeficiente: Math.abs(coeficiente) * -1,
-            molInicial
+            molInicial,
+            massaInicial
         });
     }
 
-    setProduto({ substancia, coeficiente, molInicial = 0 }: MembroSet) {
+    setProduto({ substancia, coeficiente, molInicial = 0, massaInicial = 0 }: MembroSet) {
+        // Normaliza: não pode receber molInicial e massaInicial ao mesmo tempo
+        if(molInicial != 0 && massaInicial != 0)
+            massaInicial = 0;
+            
+        // Calcula a massa inicial
+        if(molInicial != 0)
+            massaInicial = substancia.getMassaMolar() * molInicial;
+
+        // Calcula a quantidade de matéria inicial
+        if(massaInicial != 0)
+            molInicial = massaInicial / substancia.getMassaMolar();
+
         this.produtos.push({
             substancia,
             coeficiente: Math.abs(coeficiente),
-            molInicial
+            molInicial,
+            massaInicial
         });
     }
 
