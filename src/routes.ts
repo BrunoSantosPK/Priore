@@ -10,8 +10,12 @@ const ctElements = new ControllerElementos();
 routes.get("/elementos", ctElements.get);
 routes.get("/massamolar/:formula", ctElements.massaMolar);
 
+// Validações para reações
+import validarReacaoSimples from "./validators/reacaoSimples"; 
+
 // Rotas de reações químicas
 const ctReacoes = new ControllerReacoes();
 routes.post("/balancear", ctReacoes.balancear);
+routes.post("/verificarbalanco", validarReacaoSimples, ctReacoes.validarBalanceamento);
 
 export default routes;

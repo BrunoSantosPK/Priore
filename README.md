@@ -6,9 +6,55 @@
 
 ##### Gerenciamento de substâncias
 
-Através da rota **/elementos** é possível encontrar todos os elementos da Tabela Periódica.
+Detalhes:
 
-Com a rota **/massamolar/:formula** é possível calcular a massa molar para qualquer substância, dada a fórmula química passada como parâmetro.
+Quando qualquer erro ocorre, a resposta é enviada com statusCode = 400, podendo o erro ser recuperado através do atributo **message** do JSON enviado.
+
+Igualmente, para qualquer requisição com sucesso, o atributo **message** pode ser consultado para detalhes.
+
+Rota GET: **/elementos**
+
+Lista todos os elementos da Tabela Periódica, ordenados pelo número atômico.
+
+Rota GET: **/massamolar/:formula**
+
+Calcula a massa molar para uma fórmula química passada como parâmetro.
+
+
+Rota POST: **/verificarbalanco**
+
+Para uma reação genérica, enviada pelo usuário, verifica se o balanceamento está correto.
+
+Exemplo de requisição:
+
+```
+{
+	"reagentes": [
+		{
+			"formula": "HCl",
+			"coeficiente": 1,
+			"nome": "Ácido Clorídrico"
+		},
+		{
+			"formula": "NaOH",
+			"coeficiente": 1,
+			"nome": "Hidróxido de Sódio"
+		}
+	],
+	"produtos": [
+		{
+			"formula": "H2O",
+			"coeficiente": 1,
+			"nome": "Água"
+		},
+		{
+			"formula": "NaCl",
+			"coeficiente": 1,
+			"nome": "Cloreto de Sódio"
+		}
+	]
+}
+```
 
 **Projeto idealizado por Bruno Santos, egenheiro químico, professor e programador.**
 

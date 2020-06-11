@@ -21,7 +21,7 @@
     "typescript": "^3.9.5"
   },
   "devDependencies": {
+    "@types/hapi__joi": "^17.1.2",
     "ts-node-dev": "^1.0.0-pre.44"
-    
   }
 }

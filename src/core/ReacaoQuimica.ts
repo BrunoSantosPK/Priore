@@ -42,6 +42,7 @@ export default class ReacaoQuimica implements Integridade {
     produtos: Membro[] = [];
     conversao = 0;
 
+    // TODO: definir como será a implementação do montar
     montar() {}
 
     setConversao(valor: number): boolean {
@@ -128,12 +129,13 @@ export default class ReacaoQuimica implements Integridade {
         let balanceado = true;
         let msn = "";
         elementos.forEach(el => {
+            let valor = Math.abs(el.multiplicador);
             if(el.multiplicador < 0) {
                 balanceado = false;
-                msn += `O elemento ${el.simbolo} está em excesso nos reagentes. `;
+                msn += `O elemento ${el.simbolo} está em excesso (${valor} átomos) nos reagentes. `;
             } else if(el.multiplicador > 0) {
                 balanceado = false;
-                msn += `O elemento ${el.simbolo} está em excesso nos produtos. `;
+                msn += `O elemento ${el.simbolo} está em excesso (${valor} átomos) nos produtos. `;
             }
         });
 
