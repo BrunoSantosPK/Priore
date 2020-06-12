@@ -1,4 +1,3 @@
-import TabelaPeriodica from "./TabelaPeriodica";
 import Integridade from "./interfaces/Integridade";
 import ElementoQuimico from "./interfaces/ElementoQuimico";
 import Substancia from "./Substancia";

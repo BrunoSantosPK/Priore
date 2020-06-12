@@ -20,6 +20,9 @@ Rota GET: **/massamolar/:formula**
 
 Calcula a massa molar para uma fórmula química passada como parâmetro.
 
+Rota GET: **/substancias?filter={query}**
+
+Retorna todas as substâncias previamente cadastradas no banco. Pode receber um filtro para filtrar os resultados, sendo um parâmetro opcional. Quando omitido, retorna todos os valores. O filtro pode ser o nome de uma substância (faz diferença entre maiúsculas e minúsculas) ou a fórmula química.
 
 Rota POST: **/verificarbalanco**
 

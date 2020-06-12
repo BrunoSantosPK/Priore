@@ -8,7 +8,52 @@ import Substancia from "../core/Substancia";
 // Classes de manipulação
 import Send from "../utils/Send";
 
+// Conexão com o banco de dados
+import conectar from "../database/conectar";
+
 export default class ControllerElementos {
+
+    async substanciasCadastradas(request: Request, response: Response) {
+        // Verifica se algum parâmetro de filtro foi passado
+        const { filter = "all" } = request.query;
+        const envio = new Send();
+        const knex = conectar();
+
+        let dados, msg;
+        try {
+            if(filter == "all") {
+                msg = "Busca por todos os cadastros.";
+                dados = await knex("substancias").select("*");
+            } else {
+                msg = `Busca realizada para ${filter}.`
+                dados = await knex("substancias").select("*").where({
+                    nome: filter
+                }).orWhere({ formula_quimica: filter });
+            }
+    
+            // Percorre a lista de respostas e cria uma instância da substância
+            const res: {}[] = [];
+            dados.forEach(subs => {
+                let substancia = new Substancia(subs.formula_quimica, subs.nome);
+                res.push({
+                    id: subs.id_substancia,
+                    nome: subs.nome,
+                    formula: subs.formula_quimica,
+                    massaMolar: substancia.getMassaMolar(),
+                    composicao: substancia.getComposicao()
+                });
+            });
+
+            // Organiza a resposta
+            envio.data(res);
+            envio.message(msg);
+        } catch(erro) {
+            envio.message(erro.message);
+            response.status(400);
+        }
+
+        return response.json(envio.get())
+    }
 
     get(request: Request, response: Response) {
         // Verifica se algum parâmetro de filtro foi passado

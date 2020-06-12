@@ -5,7 +5,9 @@
   "main": "src/server.ts",
   "scripts": {
     "devrun": "ts-node-dev --transpileOnly --ignore-watch node_modules src/server.ts",
-    "start": "ts-node src/server.ts"
+    "start": "ts-node src/server.ts",
+    "migrate": "knex --knexfile knexfile.ts migrate:latest",
+    "seed": "knex --knexfile knexfile.ts seed:run"
   },
   "author": "BrunoSantosPK",
   "license": "MIT",
