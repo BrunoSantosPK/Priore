@@ -1,10 +1,8 @@
 # Projeto Priore
 
-### Um compilado de soluções da química e da engenharia
-
 *Priore nasce da vontade de criar uma solução livre para operações recorrentes da química e da engenharia, sobretudo para o ambiente educacional. Desse modo, será possível reduzir, ao menos um pouco, o abismo da desigualdade.*
 
-##### Gerenciamento de substâncias
+## Gerenciamento de substâncias
 
 Detalhes:
 
@@ -59,8 +57,8 @@ Exemplo de requisição:
 }
 ```
 
-**Projeto idealizado por Bruno Santos, egenheiro químico, professor e programador.**
+## Contato
 
-*Projeto em andamento*
-
-Contato para sugestões, críticas e melhorias: bruno.ajsch@yahoo.com
+Projeto desenvolvido por Bruno de Lima Santos.<br>
+E-mail: bruno.19ls@gmail.com<br>
+Linkedin: [Bruno Santos](https://www.linkedin.com/in/bruno-santos/)
